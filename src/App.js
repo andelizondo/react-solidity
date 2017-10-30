@@ -15,6 +15,7 @@ const tokenFiets = contract(TokenFiets)
 
 const defaultState = {
   // App
+  hasError: false,
   etherSent: false,
   // User
   currentAddress: "Loading",
@@ -85,14 +86,20 @@ class App extends Component {
     crowdsaleFiets.deployed().then((instance) => {
       this.setState({ crowdsaleFiets: instance })
       this.updateCrowdsale()
-    }).catch(error => console.log(error))
+    }).catch(error => {
+      this.setState({ hasError: true })
+      console.log(error)
+    })
   }
   instantiateToken() {
     tokenFiets.setProvider(this.state.web3.currentProvider)
     tokenFiets.deployed().then((instance) => {
       this.setState({ tokenFiets: instance })
       this.updateToken()
-    }).catch(error => console.log(error))
+    }).catch(error => {
+      this.setState({ hasError: true })
+      console.log(error)
+    })
   }
 
   /*
@@ -141,6 +148,8 @@ class App extends Component {
   donate() {
     var state = this.state
     if (state.etherSent) return
+    if (!this.state.tokenFiets) return
+    if (!this.state.crowdsaleFiets) return
 
     this.state.tokenFiets.mintAgents(this.state.crowdsaleFiets.address).then((isMintingAgent) => {
       if (isMintingAgent) {
@@ -164,6 +173,8 @@ class App extends Component {
   }
   close() {
     var _this = this
+    if (!this.state.crowdsaleFiets) return
+
     this.state.crowdsaleFiets.close().then(function(result) {
       _this.updateContract()
     })
@@ -185,7 +196,15 @@ class App extends Component {
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" onClick={this.donate} className="pure-menu-heading pure-menu-link">Fiets Crowdsale - { !this.state.etherSent ? 'Donate 10ETH' : 'Thanks for donating!' }</a>
+            <a
+              href="#" onClick={this.donate}
+              className="pure-menu-heading pure-menu-link">
+              Fiets Crowdsale - {this.state.hasError
+                ? 'Error!'
+                : (!this.state.etherSent
+                  ? 'Donate 10ETH'
+                  : 'Thanks for donating!')}
+            </a>
         </nav>
 
         <main className="container">
