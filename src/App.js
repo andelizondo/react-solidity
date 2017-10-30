@@ -73,7 +73,7 @@ class App extends Component {
       web3.eth.defaultAccount = accounts[0]
       this.setState({
         web3: web3,
-        currentAddress: web3.eth.defaultAccount
+        currentAddress: web3.eth.defaultAccount || defaultState.currentAddress
       })
 
       this.instantiateCrowdsale()
@@ -85,14 +85,14 @@ class App extends Component {
     crowdsaleFiets.deployed().then((instance) => {
       this.setState({ crowdsaleFiets: instance })
       this.updateCrowdsale()
-    })
+    }).catch(error => console.log(error))
   }
   instantiateToken() {
     tokenFiets.setProvider(this.state.web3.currentProvider)
     tokenFiets.deployed().then((instance) => {
       this.setState({ tokenFiets: instance })
       this.updateToken()
-    })
+    }).catch(error => console.log(error))
   }
 
   /*
