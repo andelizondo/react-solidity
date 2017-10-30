@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "6.11.5"
+    "node": "6.11.5",
+    "npm": "3.10.10"
   },
   "devDependencies": {
     "autoprefixer": "6.5.1",

@@ -32,6 +32,11 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 }
 
 // Tools like Cloud9 rely on this.
+app.listen(process.env.PORT || 3000, function() {
+  console.log("Express server listening on port %d in %s mode",
+    this.address().port,
+    app.settings.env);
+});
 var DEFAULT_PORT = process.env.PORT || 3000;
 var compiler;
 var handleCompile;
