@@ -18,6 +18,8 @@ class App extends Component {
     super(props)
 
     this.state = {
+      // App
+      etherSent: false,
       // User
       currentAddress: "Loading",
       currentBalance: "Loading",
@@ -28,6 +30,8 @@ class App extends Component {
       crowdsaleWallet: "Loading",
       crowdsaleAmountRaised: "Loading",
       crowdsaleGoalReached: "Loading",
+      crowdsaleEnded: "Loading",
+      crowdsaleClosed: "Loading",
       // Token
       tokenFiets: null,
       tokenAddress: "Loading",
@@ -37,6 +41,7 @@ class App extends Component {
     }
 
     this.donate = this.donate.bind(this);
+    this.processDonation = this.processDonation.bind(this);
   }
 
   componentWillMount() {
@@ -89,7 +94,13 @@ class App extends Component {
       return this.setState({ crowdsaleAmountRaised: result.c[0] })
     })
     crowdsaleFietsInstance.goalReached().then((result) => {
-      return this.setState({ crowdsaleGoalReached: result })
+      return this.setState({ crowdsaleGoalReached: result.toString() })
+    })
+    crowdsaleFietsInstance.hasEnded().then((result) => {
+      return this.setState({ crowdsaleEnded: result.toString() })
+    })
+    crowdsaleFietsInstance.isClosed().then((result) => {
+      return this.setState({ crowdsaleClosed: result.toString() })
     })
   }
 
@@ -127,11 +138,12 @@ class App extends Component {
     })
   }
   processDonation() {
+    var _this = this
     this.state.crowdsaleFiets.buyTokens(this.state.currentAddress, {
-      value: this.state.web3.toWei(10, "ether"),
+      value: this.state.web3.toWei(12, "ether"),
       gas: 3000000
     }).then(function(result) {
-      return this.state({ etherSent: true })
+      _this.setState({ etherSent: true })
     })
   }
 
@@ -139,7 +151,7 @@ class App extends Component {
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" onClick={this.donate} className="pure-menu-heading pure-menu-link">Fiets Crowdsale (Donate 10ETH)</a>
+            <a href="#" onClick={this.donate} className="pure-menu-heading pure-menu-link">Fiets Crowdsale - { !this.state.etherSent ? 'Donate 10ETH' : 'Thanks for donating!' }</a>
         </nav>
 
         <main className="container">
@@ -154,13 +166,13 @@ class App extends Component {
               <p>Owner: {this.state.crowdsaleOwner}</p>
               <p>Wallet: {this.state.crowdsaleWallet}</p>
               <p>Amount Raised: {this.state.crowdsaleAmountRaised}</p>
-              <p>Goal Reached: {this.state.crowdsaleGoalReached.toString()}</p>
+              <p>Goal Reached: {this.state.crowdsaleGoalReached}</p>
+              <p>Finished: {this.state.crowdsaleEnded}</p>
+              <p>Closed: {this.state.crowdsaleClosed}</p>
 
               <h2>Crowdsale Token</h2>
               <p>Address: {this.state.tokenAddress}</p>
               <p>Owner: {this.state.tokenOwner}</p>
-
-              {this.state.etherSent && <h3>Thanks for donating!</h3>}
             </div>
           </div>
         </main>
