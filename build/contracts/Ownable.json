@@ -1,0 +1,57 @@
+{
+  "contract_name": "Ownable",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [
+        {
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "payable": false,
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "_owner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipChange",
+      "type": "event"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000f57600080fd5b5b60008054600160a060020a03191633600160a060020a03161790555b5b6101a78061003c6000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416638da5cb5b8114610048578063f2fde38b14610084575b600080fd5b341561005357600080fd5b61005b6100c4565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341561008f57600080fd5b6100b073ffffffffffffffffffffffffffffffffffffffff600435166100e0565b604051901515815260200160405180910390f35b60005473ffffffffffffffffffffffffffffffffffffffff1681565b600080543373ffffffffffffffffffffffffffffffffffffffff90811691161461010957600080fd5b6000805473ffffffffffffffffffffffffffffffffffffffff191673ffffffffffffffffffffffffffffffffffffffff8481169190911791829055167f83145fd658f708bac37424791a8ef3907324d87520701e5e966369c6ca583da360405160405180910390a25060015b5b9190505600a165627a7a72305820a8939221e11fcf56a516d63ce4efd521cd0490c1103b2ff565ace78b1445a7120029",
+  "networks": {},
+  "schema_version": "0.0.5",
+  "updated_at": 1509405768070
+}
