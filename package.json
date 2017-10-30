@@ -6,6 +6,7 @@
     "node": "6.11.5",
     "npm": "3.10.10"
   },
+  "root": "build_webpack /",
   "devDependencies": {
     "autoprefixer": "6.5.1",
     "babel-core": "6.17.0",
