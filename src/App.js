@@ -13,37 +13,41 @@ const contract = require('truffle-contract')
 const crowdsaleFiets = contract(CrowdsaleFiets)
 const tokenFiets = contract(TokenFiets)
 
+const defaultState = {
+  // App
+  etherSent: false,
+  // User
+  currentAddress: "Loading",
+  currentBalance: "Loading",
+  // Crowdsale
+  crowdsaleFiets: null,
+  crowdsaleAddress: "Loading",
+  crowdsaleOwner: "Loading",
+  crowdsaleWallet: "Loading",
+  crowdsaleAmountRaised: "Loading",
+  crowdsaleGoalReached: "Loading",
+  crowdsaleEnded: "Loading",
+  crowdsaleClosed: "Loading",
+  // Token
+  tokenFiets: null,
+  tokenAddress: "Loading",
+  tokenOwner: "Loading",
+  // Utils
+  web3: null
+}
+
 class App extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      // App
-      etherSent: false,
-      // User
-      currentAddress: "Loading",
-      currentBalance: "Loading",
-      // Crowdsale
-      crowdsaleFiets: null,
-      crowdsaleAddress: "Loading",
-      crowdsaleOwner: "Loading",
-      crowdsaleWallet: "Loading",
-      crowdsaleAmountRaised: "Loading",
-      crowdsaleGoalReached: "Loading",
-      crowdsaleEnded: "Loading",
-      crowdsaleClosed: "Loading",
-      // Token
-      tokenFiets: null,
-      tokenAddress: "Loading",
-      tokenOwner: "Loading",
-      // Utils
-      web3: null
-    }
-
+    this.state = defaultState
     this.donate = this.donate.bind(this);
-    this.processDonation = this.processDonation.bind(this);
+    this.close = this.close.bind(this);
   }
 
+  /*
+   * Lifecycle Methods
+   */
   componentWillMount() {
     // Get network provider and web3 instance.
     // See utils/getWeb3 for more info.
@@ -59,6 +63,9 @@ class App extends Component {
     })
   }
 
+  /*
+   * Contract Instantiation
+   */
   instantiateContract() {
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
@@ -66,20 +73,34 @@ class App extends Component {
       web3.eth.defaultAccount = accounts[0]
       this.setState({
         web3: web3,
-        currentAddress: accounts[0]
+        currentAddress: web3.eth.defaultAccount
       })
 
       this.instantiateCrowdsale()
       this.instantiateToken()
     })
   }
-
   instantiateCrowdsale() {
     crowdsaleFiets.setProvider(this.state.web3.currentProvider)
     crowdsaleFiets.deployed().then((instance) => {
       this.setState({ crowdsaleFiets: instance })
       this.updateCrowdsale()
     })
+  }
+  instantiateToken() {
+    tokenFiets.setProvider(this.state.web3.currentProvider)
+    tokenFiets.deployed().then((instance) => {
+      this.setState({ tokenFiets: instance })
+      this.updateToken()
+    })
+  }
+
+  /*
+   * UI Update
+   */
+  updateContract() {
+    this.updateCrowdsale()
+    this.updateToken()
   }
   updateCrowdsale() {
     var crowdsaleFietsInstance = this.state.crowdsaleFiets
@@ -103,14 +124,6 @@ class App extends Component {
       return this.setState({ crowdsaleClosed: result.toString() })
     })
   }
-
-  instantiateToken() {
-    tokenFiets.setProvider(this.state.web3.currentProvider)
-    tokenFiets.deployed().then((instance) => {
-      this.setState({ tokenFiets: instance })
-      this.updateToken()
-    })
-  }
   updateToken() {
     var tokenFietsInstance = this.state.tokenFiets
     this.setState({ tokenAddress: tokenFietsInstance.address })
@@ -122,7 +135,10 @@ class App extends Component {
     })
   }
 
-  donate(accounts) {
+  /*
+   * UI EventHandlers
+   */
+  donate() {
     var state = this.state
     if (state.etherSent) return
 
@@ -140,13 +156,31 @@ class App extends Component {
   processDonation() {
     var _this = this
     this.state.crowdsaleFiets.buyTokens(this.state.currentAddress, {
-      value: this.state.web3.toWei(12, "ether"),
-      gas: 3000000
+      value: this.state.web3.toWei(12, "ether")
     }).then(function(result) {
       _this.setState({ etherSent: true })
+      _this.updateContract()
+    })
+  }
+  close() {
+    var _this = this
+    this.state.crowdsaleFiets.close().then(function(result) {
+      _this.updateContract()
     })
   }
 
+  /*
+   * Helpers
+   */
+  isClosable() {
+    return this.state.crowdsaleEnded === 'true'
+      && this.state.crowdsaleClosed === 'false'
+      && this.state.currentAddress === this.state.crowdsaleOwner;
+  }
+
+  /*
+   * Render Method
+   */
   render() {
     return (
       <div className="App">
@@ -156,7 +190,7 @@ class App extends Component {
 
         <main className="container">
           <div className="pure-g">
-            <div className="pure-u-1-1">
+            <div className="pure-u-1-1 crowdsale-details">
               <h2>User Information</h2>
               <p>Your Address: {this.state.currentAddress}</p>
               <p>Your Token Balance: {this.state.currentBalance}</p>
@@ -167,8 +201,14 @@ class App extends Component {
               <p>Wallet: {this.state.crowdsaleWallet}</p>
               <p>Amount Raised: {this.state.crowdsaleAmountRaised}</p>
               <p>Goal Reached: {this.state.crowdsaleGoalReached}</p>
-              <p>Finished: {this.state.crowdsaleEnded}</p>
+              <p>Ended: {this.state.crowdsaleEnded}</p>
               <p>Closed: {this.state.crowdsaleClosed}</p>
+              {this.isClosable() &&
+                  <a href="#" onClick={this.close}
+                      className="donate-button pure-menu-link">
+                      Close Crowdfund
+                  </a>
+              }
 
               <h2>Crowdsale Token</h2>
               <p>Address: {this.state.tokenAddress}</p>

@@ -2,11 +2,11 @@
 
 body,
 .pure-g [class*=pure-u] {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Segoe UI';
 }
 
 h1, h2, h3 {
-  font-family: 'Oswald', 'Arial Narrow', sans-serif;
+  font-weight: 600;
 }
 
 code {
@@ -40,7 +40,6 @@ code {
   position: fixed;
   padding: 5px;
   background: #0c1a2b;
-  font-family: 'Oswald', 'Arial Narrow', sans-serif;
 }
 
 .navbar a {
@@ -65,4 +64,25 @@ code {
 .navbar .uport-logo {
   height: 16px;
   margin-right: 10px;
+}
+
+/* Body - Information */
+.crowdsale-details h2 {
+  font-size: 18px;
+}
+.crowdsale-details p {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.donate-button {
+  width: 200px;
+  text-align: center;
+  background: darkred;
+  color: white;
+}
+.donate-button:hover,
+.donate-button:focus {
+  background: #ab0202;
+  color: white;
 }
