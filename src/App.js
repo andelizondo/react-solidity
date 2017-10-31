@@ -82,6 +82,7 @@ class App extends Component {
     })
   }
   instantiateCrowdsale() {
+    crowdsaleFiets.defaults({from: this.state.currentAddress})
     crowdsaleFiets.setProvider(this.state.web3.currentProvider)
     crowdsaleFiets.deployed().then((instance) => {
       this.setState({ crowdsaleFiets: instance })
@@ -179,6 +180,14 @@ class App extends Component {
       _this.updateContract()
     })
   }
+  refund() {
+    var _this = this
+    if (!this.state.crowdsaleFiets) return
+
+    this.state.crowdsaleFiets.claimRefund().then(function(result) {
+      _this.updateContract()
+    })
+  }
 
   /*
    * Helpers
@@ -187,6 +196,12 @@ class App extends Component {
     return this.state.crowdsaleEnded === 'true'
       && this.state.crowdsaleClosed === 'false'
       && this.state.currentAddress === this.state.crowdsaleOwner;
+  }
+  isRefundable() {
+    return this.state.crowdsaleEnded === 'true'
+      && this.state.crowdsaleClosed === 'true'
+      && this.state.crowdsaleGoalReached === 'false'
+      // && vault.balances[this.state.currentAddress] > 0;
   }
 
   /*
@@ -225,7 +240,13 @@ class App extends Component {
               {this.isClosable() &&
                   <a href="#" onClick={this.close}
                       className="donate-button pure-menu-link">
-                      Close Crowdfund
+                      Close Crowdsale
+                  </a>
+              }
+              {this.isRefundable() &&
+                  <a href="#" onClick={this.refund}
+                      className="donate-button pure-menu-link">
+                      Get Refund
                   </a>
               }
 
