@@ -84,7 +84,10 @@ class App extends Component {
     })
   }
   instantiateCrowdsale() {
-    crowdsaleFiets.defaults({from: this.state.currentAddress})
+    crowdsaleFiets.defaults({
+      from: this.state.currentAddress,
+      gas: 3000000
+    })
     crowdsaleFiets.setProvider(this.state.web3.currentProvider)
     crowdsaleFiets.deployed().then((instance) => {
       this.setState({ crowdsaleFiets: instance })
@@ -161,6 +164,9 @@ class App extends Component {
       else {
         this.state.tokenFiets.approveMintAgent(this.state.crowdsaleFiets.address, true).then((result) => {
           this.processDonation()
+        }).catch(error => {
+          this.setState({ hasError: true })
+          console.log(error)
         })
       }
     })
@@ -172,6 +178,9 @@ class App extends Component {
     }).then(function(result) {
       _this.setState({ etherSent: true })
       _this.updateContract()
+    }).catch(error => {
+      this.setState({ hasError: true })
+      console.log(error)
     })
   }
   close() {
@@ -180,6 +189,9 @@ class App extends Component {
 
     this.state.crowdsaleFiets.close().then(function(result) {
       _this.updateContract()
+    }).catch(error => {
+      this.setState({ hasError: true })
+      console.log(error)
     })
   }
   refund() {
@@ -188,6 +200,9 @@ class App extends Component {
 
     this.state.crowdsaleFiets.claimRefund().then(function(result) {
       _this.updateContract()
+    }).catch(error => {
+      this.setState({ hasError: true })
+      console.log(error)
     })
   }
 
@@ -251,7 +266,7 @@ class App extends Component {
               <p>Goal Reached: {this.state.crowdsaleGoalReached}</p>
               <p>Ended: {this.state.crowdsaleEnded}</p>
               <p>Closed: {this.state.crowdsaleClosed}</p>
-              
+
               <h2>Crowdsale Token</h2>
               <p>Address: {this.state.tokenAddress}</p>
               <p>Owner: {this.state.tokenOwner}</p>
