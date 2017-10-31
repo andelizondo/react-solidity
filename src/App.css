@@ -20,7 +20,7 @@ code {
 .container {
   box-sizing: border-box;
   width: 100%;
-  padding: 45px 20px;
+  padding: 50px 20px;
 }
 
 .pure-button-primary {
@@ -36,21 +36,16 @@ code {
 }
 
 /* NAVBAR */
-
 .navbar {
   position: fixed;
   padding: 5px;
   background: #0c1a2b;
 }
 
-.navbar a {
+.navbar h4 {
   color: #fff;
-}
-
-.navbar a:active,
-.navbar a:focus,
-.navbar a:hover {
-  background: #233e5e;
+  padding: 11px 20px;
+  margin: 0;
 }
 
 .navbar .pure-menu-heading {

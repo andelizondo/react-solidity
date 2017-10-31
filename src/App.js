@@ -19,7 +19,6 @@ const crowdsaleVault = contract(CrowdsaleVault)
 const defaultState = {
   // App
   hasError: false,
-  etherSent: false,
   amountToDonate: 12,
   // User
   currentAddress: "Loading",
@@ -38,6 +37,7 @@ const defaultState = {
   tokenFiets: null,
   tokenAddress: "Loading",
   tokenOwner: "Loading",
+  tokenSupply: "Loading",
   // Vault
   crowdsaleVault: null,
   currentlyDeposited: "Loading",
@@ -73,8 +73,8 @@ class App extends Component {
 
   // Contract Instantiation
   instantiateContracts() {
-    // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
+      // Get accounts, set web3 and currentAddress
       var web3 = this.state.web3;
       web3.eth.defaultAccount = accounts[0]
       this.setState({
@@ -82,25 +82,35 @@ class App extends Component {
         currentAddress: web3.eth.defaultAccount || defaultState.currentAddress
       })
 
+      // Defaults and Providers
+      const contractDefaults = {
+        from: this.state.currentAddress,
+        gas: 3000000,
+        gasPrice: web3.toWei(1, "gwei")
+      }
+      tokenFiets.defaults(contractDefaults)
+      crowdsaleFiets.defaults(contractDefaults)
+      crowdsaleVault.defaults(contractDefaults)
+      tokenFiets.setProvider(this.state.web3.currentProvider)
+      crowdsaleFiets.setProvider(this.state.web3.currentProvider)
+      crowdsaleVault.setProvider(this.state.web3.currentProvider)
+
+      // Instantiation
       this.instantiateCrowdsale()
-      this.instantiateToken()
     })
   }
   instantiateCrowdsale() {
-    crowdsaleFiets.defaults({from: this.state.currentAddress, gas: 3000000})
-    crowdsaleFiets.setProvider(this.state.web3.currentProvider)
     crowdsaleFiets.deployed().then((instance) => {
       this.setState({crowdsaleFiets: instance})
-      this.instantiateVault()
       this.updateCrowdsale()
+      this.instantiateToken()
+      this.instantiateVault()
     }).catch(error => {
       this.setState({hasError: true})
       console.log(error)
     })
   }
   instantiateToken() {
-    tokenFiets.defaults({from: this.state.currentAddress, gas: 3000000})
-    tokenFiets.setProvider(this.state.web3.currentProvider)
     tokenFiets.deployed().then((instance) => {
       this.setState({tokenFiets: instance})
       this.updateToken()
@@ -110,7 +120,6 @@ class App extends Component {
     })
   }
   instantiateVault() {
-    crowdsaleVault.setProvider(this.state.web3.currentProvider)
     // Existing instance of the contract
     this.state.crowdsaleFiets.vault().then(result => {
       crowdsaleVault.at(result).then(instance => {
@@ -130,7 +139,9 @@ class App extends Component {
     this.updateVault()
   }
   updateCrowdsale() {
-    this.setState({crowdsaleAddress: this.state.crowdsaleFiets.address})
+    this.setState({
+      crowdsaleAddress: this.state.crowdsaleFiets.address
+    })
     this.state.crowdsaleFiets.owner().then((result) => {
       return this.setState({crowdsaleOwner: result})
     })
@@ -138,7 +149,7 @@ class App extends Component {
       return this.setState({crowdsaleWallet: result})
     })
     this.state.crowdsaleFiets.amountRaised().then((result) => {
-      return this.setState({crowdsaleAmountRaised: result.c[0]})
+      return this.setState({crowdsaleAmountRaised: this.state.web3.fromWei(result.c.join(''), "ether")})
     })
     this.state.crowdsaleFiets.goalReached().then((result) => {
       return this.setState({crowdsaleGoalReached: result.toString()})
@@ -154,107 +165,135 @@ class App extends Component {
     })
   }
   updateToken() {
-    this.setState({tokenAddress: this.state.tokenFiets.address})
-    this.state.tokenFiets.mintAgents(this.state.crowdsaleAddress).then((isMintingAgent) => {
-      this.setState({crowdsaleApproved: isMintingAgent.toString()})
-    })
-    this.state.tokenFiets.balanceOf(this.state.currentAddress).then((result) => {
-      return this.setState({currentBalance: result.c[0]})
+    this.setState({
+      tokenAddress: this.state.tokenFiets.address
     })
     this.state.tokenFiets.owner().then((result) => {
       return this.setState({tokenOwner: result})
     })
+    this.state.tokenFiets.totalSupply().then((result) => {
+      return this.setState({tokenSupply: result.c.join('')})
+    })
+    this.state.tokenFiets.balanceOf(this.state.currentAddress).then((result) => {
+      return this.setState({currentBalance: result.c.join('')})
+    })
+    this.state.tokenFiets.mintAgents(this.state.crowdsaleAddress).then((isMintingAgent) => {
+      this.setState({crowdsaleApproved: isMintingAgent.toString()})
+    })
   }
   updateVault() {
     this.state.crowdsaleVault.deposited(this.state.currentAddress).then((result) => {
-      return this.setState({currentlyDeposited: result.c[0]})
+      return this.setState({currentlyDeposited: this.state.web3.fromWei(result.c.join(''), "ether")})
     })
   }
 
   // UI EventHandlers
   approve() {
     if (!this.state.tokenFiets
-    ||  !this.state.crowdsaleFiets) return
-
-    var _this = this
-    this.state.tokenFiets.approveMintAgent(this.state.crowdsaleFiets.address, true).then((result) => {
-      _this.updateContract()
-    })
-  }
-  donate() {
-    if (this.state.etherSent
-    || !this.state.tokenFiets
-    || !this.state.crowdsaleFiets)
+    ||  !this.state.crowdsaleFiets)
       return
 
     var _this = this
-    this.state.crowdsaleFiets.buyTokens(this.state.currentAddress, {
-      value: this.state.web3.toWei(this.state.amountToDonate, "ether")
-    })
-    .then(function(result) {
-      _this.setState({etherSent: true})
+    this.state.tokenFiets.approveMintAgent(this.state.crowdsaleFiets.address, true)
+    .then(result => {
       _this.updateContract()
     })
     .catch(error => {
-      this.setState({hasError: true})
+      console.log(error)
+    })
+  }
+  donate() {
+    if (!this.state.tokenFiets
+    ||  !this.state.crowdsaleFiets)
+      return
+
+    var _this = this
+    this.state.crowdsaleFiets.send(this.state.web3.toWei(this.state.amountToDonate, "ether"))
+    .then(result => {
+      _this.updateContract()
+    })
+    .catch(error => {
       console.log(error)
     })
   }
   close() {
-    var _this = this
     if (!this.state.crowdsaleFiets)
       return
 
-    this.state.crowdsaleFiets.close().then(function(result) {
+    var _this = this
+    this.state.crowdsaleFiets.close()
+    .then(result => {
       _this.updateContract()
-    }).catch(error => {
-      this.setState({hasError: true})
+    })
+    .catch(error => {
       console.log(error)
     })
   }
   refund() {
-    var _this = this
     if (!this.state.crowdsaleFiets)
       return
 
-    this.state.crowdsaleFiets.claimRefund().then(function(result) {
+    var _this = this
+    this.state.crowdsaleFiets.claimRefund()
+    .then(result => {
       _this.updateContract()
-    }).catch(error => {
-      this.setState({hasError: true})
+    })
+    .catch(error => {
       console.log(error)
     })
   }
 
-  // Helpers
-  isApprovable() {
+  // Boolean Getters
+  get isApprovable() {
     return this.state.crowdsaleEnded === 'false'
         && this.state.crowdsaleApproved === 'false'
         && this.state.currentAddress === this.state.crowdsaleOwner;
   }
-  isDonable() {
+  get isDonable() {
     return this.state.crowdsaleEnded === 'false'
         && this.state.crowdsaleApproved === 'true'
   }
-  isClosable() {
+  get isClosable() {
     return this.state.crowdsaleEnded === 'true'
         && this.state.crowdsaleClosed === 'false'
         && this.state.currentAddress === this.state.crowdsaleOwner;
   }
-  isRefundable() {
+  get isRefundable() {
     return this.state.crowdsaleEnded === 'true'
         && this.state.crowdsaleClosed === 'true'
         && this.state.crowdsaleGoalReached === 'false'
         && this.state.currentlyDeposited > 0;
   }
 
-  // Render Method
+  // Render Methods
+  renderActionButton() {
+    const buttonData = this.getButtonData()
+    return buttonData && (
+      <a href="#" onClick={buttonData.action} className={`pure-menu-link ${buttonData.className}`}>
+        {buttonData.text}
+      </a>
+    )
+  }
+  getButtonData() {
+    return this.isApprovable ? {
+      action: this.approve, className: "green-button", text: "Approve Crowdsale"
+    } :
+    this.isDonable ? {
+      action: this.donate, className: "green-button", text: `Donate Ξ${this.state.amountToDonate}`
+    } :
+    this.isClosable ? {
+      action: this.close, className: "red-button", text: "Close Crowdsale"
+    } :
+    this.isRefundable ? {
+      action: this.refund, className: "red-button", text: "Get Refund"
+    } : null
+  }
+
   render() {
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
-          <a href="#" className="pure-menu-heading pure-menu-link">
-            Fiets Crowdsale {this.state.hasError && '- Error!'}
-          </a>
+          <h4>Fiets Crowdsale {this.state.hasError && '- Error!'}</h4>
         </nav>
         <main className="container">
           <div className="pure-g">
@@ -262,37 +301,14 @@ class App extends Component {
               <h2>User Information</h2>
               <p>Your Address: {this.state.currentAddress}</p>
               <p>Your Token Balance: {this.state.currentBalance}</p>
-              <p>Currently Deposited: {this.state.currentlyDeposited}</p>
-              {
-                this.isApprovable() &&
-                <a href="#" onClick={this.approve} className="green-button pure-menu-link">
-                  Approve Crowdsale
-                </a>
-              }
-              {
-                this.isDonable() &&
-                <a href="#" onClick={this.donate} className="green-button pure-menu-link">
-                  {!this.state.etherSent ? `Donate ${this.state.amountToDonate}ETH` : 'Thanks for donating!'}
-                </a>
-              }
-              {
-                this.isClosable() &&
-                <a href="#" onClick={this.close} className="red-button pure-menu-link">
-                  Close Crowdsale
-                </a>
-              }
-              {
-                this.isRefundable() &&
-                <a href="#" onClick={this.refund} className="red-button pure-menu-link">
-                  Claim Refund
-                </a>
-              }
+              <p>Currently Deposited: Ξ{this.state.currentlyDeposited}</p>
+              {this.renderActionButton()}
 
               <h2>Crowdsale Contract</h2>
               <p>Address: {this.state.crowdsaleAddress}</p>
               <p>Owner: {this.state.crowdsaleOwner}</p>
               <p>Wallet: {this.state.crowdsaleWallet}</p>
-              <p>Amount Raised: {this.state.crowdsaleAmountRaised}</p>
+              <p>Amount Raised: Ξ{this.state.crowdsaleAmountRaised}</p>
               <p>Goal Reached: {this.state.crowdsaleGoalReached}</p>
               <p>Approved: {this.state.crowdsaleApproved}</p>
               <p>Ended: {this.state.crowdsaleEnded}</p>
@@ -301,6 +317,7 @@ class App extends Component {
               <h2>Crowdsale Token</h2>
               <p>Address: {this.state.tokenAddress}</p>
               <p>Owner: {this.state.tokenOwner}</p>
+              <p>Total Supply: {this.state.tokenSupply}</p>
             </div>
           </div>
         </main>
