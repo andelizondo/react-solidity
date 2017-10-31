@@ -7,7 +7,7 @@ import './Utils-Disposable.sol';
 contract CrowdsaleFiets is Crowdsale, Refundable, Disposable {
 	// Basic Crowdsale Properties
   uint256 _startTime = now;
-  uint256 _endTime = now + 60 * 1 minutes;
+  uint256 _endTime = now + 1 * 1 days;
   address _wallet = msg.sender;
 
 	// Refundable Crowdsale Properties

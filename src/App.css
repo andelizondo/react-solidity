@@ -76,14 +76,25 @@ code {
   font-weight: 600;
 }
 
-.donate-button {
+.red-button {
   width: 200px;
   text-align: center;
   background: darkred;
   color: white;
 }
-.donate-button:hover,
-.donate-button:focus {
+.red-button:hover,
+.red-button:focus {
   background: #ab0202;
+  color: white;
+}
+.green-button {
+  width: 200px;
+  text-align: center;
+  background: darkgreen;
+  color: white;
+}
+.green-button:hover,
+.green-button:focus {
+  background: green;
   color: white;
 }
