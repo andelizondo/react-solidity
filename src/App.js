@@ -40,10 +40,12 @@ const defaultState = {
 class App extends Component {
   constructor(props) {
     super(props)
-
+    // Default State
     this.state = defaultState
+    // Binding Methods
     this.donate = this.donate.bind(this);
     this.close = this.close.bind(this);
+    this.refund = this.refund.bind(this);
   }
 
   /*
@@ -228,15 +230,6 @@ class App extends Component {
               <h2>User Information</h2>
               <p>Your Address: {this.state.currentAddress}</p>
               <p>Your Token Balance: {this.state.currentBalance}</p>
-
-              <h2>Crowdsale Contract</h2>
-              <p>Address: {this.state.crowdsaleAddress}</p>
-              <p>Owner: {this.state.crowdsaleOwner}</p>
-              <p>Wallet: {this.state.crowdsaleWallet}</p>
-              <p>Amount Raised: {this.state.crowdsaleAmountRaised}</p>
-              <p>Goal Reached: {this.state.crowdsaleGoalReached}</p>
-              <p>Ended: {this.state.crowdsaleEnded}</p>
-              <p>Closed: {this.state.crowdsaleClosed}</p>
               {this.isClosable() &&
                   <a href="#" onClick={this.close}
                       className="donate-button pure-menu-link">
@@ -250,6 +243,15 @@ class App extends Component {
                   </a>
               }
 
+              <h2>Crowdsale Contract</h2>
+              <p>Address: {this.state.crowdsaleAddress}</p>
+              <p>Owner: {this.state.crowdsaleOwner}</p>
+              <p>Wallet: {this.state.crowdsaleWallet}</p>
+              <p>Amount Raised: {this.state.crowdsaleAmountRaised}</p>
+              <p>Goal Reached: {this.state.crowdsaleGoalReached}</p>
+              <p>Ended: {this.state.crowdsaleEnded}</p>
+              <p>Closed: {this.state.crowdsaleClosed}</p>
+              
               <h2>Crowdsale Token</h2>
               <p>Address: {this.state.tokenAddress}</p>
               <p>Owner: {this.state.tokenOwner}</p>
