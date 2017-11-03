@@ -9,7 +9,7 @@ contract Frozable is Token {
 	event FrozenFunds(address indexed _target, bool _frozen);
 
 	/* Frozes an account to disable transfers */
-	function freezeAccount(address _target, bool _freeze) onlyOwner returns (bool success) {
+	function freezeAccount(address _target, bool _freeze) public onlyOwner returns (bool success) {
 		frozenAccount[_target] = _freeze;
 		FrozenFunds(_target, _freeze);
 		return true;

@@ -12,21 +12,21 @@ contract CrowdsaleToken is Token, Tradeable, Mintable, Burnable, Frozable, Dispo
 	function CrowdsaleToken(
 		string _version, string _name, string _symbol, uint8  _decimals, uint256 _totalSupply,
 		uint256 _tokenPrice, uint256 _etherPrice
-	) Token (
+	) public Token (
 		_version, _name, _symbol, _decimals, _totalSupply
 	) Tradeable (
 		_tokenPrice, _etherPrice
 	) {}
 
 	/* This unnamed function is called whenever someone tries to send ether to the contract */
-	function () payable {
-        buy();
-    }
+	function () public payable {
+    buy();
+  }
 
 	// TODO: This could be implemented within an Transferable contract
-    // Overrides ownership transfer to also give all tokens to crowdsale owner
-	function transferOwnership(address _newOwner) onlyOwner returns (bool success) {
-		if(balanceOf[owner] > 0){
+  // Overrides ownership transfer to also give all tokens to crowdsale owner
+	function transferOwnership(address _newOwner) public onlyOwner returns (bool success) {
+		if (balanceOf[owner] > 0) {
 			_transfer(owner, _newOwner, balanceOf[owner]);
 		}
 		return super.transferOwnership(_newOwner);

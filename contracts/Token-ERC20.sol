@@ -16,15 +16,15 @@ contract ERC20 is HumanReadable {
 	mapping (address => mapping (address => uint256)) public allowance;
 
 	// Send _value amount of tokens to address _to
-	function transfer(address _to, uint256 _value) returns (bool success);
+	function transfer(address _to, uint256 _value) public returns (bool success);
 
 	// Send _value amount of tokens from address _from to address _to
-	function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
+	function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
 	// Allow _spender to withdraw from your account, multiple times, up to the _value amount.
 	// If this function is called again it overwrites the current allowance with _value.
 	// this function is required for some DEX functionality
-	function approve(address _spender, uint256 _value) returns (bool success);
+	function approve(address _spender, uint256 _value) public returns (bool success);
 
 	// Triggered when tokens are transferred.
 	event Transfer(address indexed _from, address indexed _to, uint256 _value);

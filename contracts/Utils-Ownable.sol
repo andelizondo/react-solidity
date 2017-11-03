@@ -10,7 +10,7 @@ contract Ownable {
 	event OwnershipChange(address indexed _owner);
 
 	// Initializes the contract and sets the owner to the contract creator
-	function Ownable() {
+	function Ownable() public {
 		owner = msg.sender;
 	}
 
@@ -21,7 +21,7 @@ contract Ownable {
 	}
 
 	// Transfers the ownership of the contract to another address
-	function transferOwnership(address _newOwner) onlyOwner returns (bool success) {
+	function transferOwnership(address _newOwner) public onlyOwner returns (bool success) {
 		owner = _newOwner;
 		OwnershipChange(owner);
 		return true;

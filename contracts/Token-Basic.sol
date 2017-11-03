@@ -11,13 +11,13 @@ contract Token is ERC20, Ownable {
 		string _symbol,
 		uint8  _decimals,
 		uint256 _totalSupply
-		) {
-		version = _version;									// Set the version for display purposes
+		) public {
+		version = _version;																// Set the version for display purposes
 		name = _name;                                   	// Set the name for display purposes
 		symbol = _symbol;                               	// Set the symbol for display purposes
 		decimals = _decimals;                           	// Amount of decimals for display purposes
-		totalSupply = _totalSupply;                        	// Update total supply
-		balanceOf[msg.sender] = totalSupply;              	// Give the creator all initial tokens
+		totalSupply = _totalSupply;                       // Update total supply
+		balanceOf[msg.sender] = totalSupply;              // Give the creator all initial tokens
 	}
 
 	/* Internal transfer, only can be called by this or inherited contracts  */
@@ -33,7 +33,7 @@ contract Token is ERC20, Ownable {
 	/// @notice Send `_value` tokens to `_to` from your account
 	/// @param _to The address of the recipient
 	/// @param _value the amount to send
-	function transfer(address _to, uint256 _value) returns (bool success) {
+	function transfer(address _to, uint256 _value) public returns (bool success) {
 		_transfer(msg.sender, _to, _value);
 		return true;
 	}
@@ -42,7 +42,7 @@ contract Token is ERC20, Ownable {
 	/// @param _from The address of the sender
 	/// @param _to The address of the recipient
 	/// @param _value the amount to send
-	function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
+	function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
 		require (_value <= allowance[_from][msg.sender]);	  // Check allowance
 		allowance[_from][msg.sender] -= _value;
 		_transfer(_from, _to, _value);
@@ -52,7 +52,7 @@ contract Token is ERC20, Ownable {
 	/// @notice Allows `_spender` to spend no more than `_value` tokens in your behalf
 	/// @param _spender The address authorized to spend
 	/// @param _value the max amount they can spend
-	function approve(address _spender, uint256 _value) returns (bool success) {
+	function approve(address _spender, uint256 _value) public returns (bool success) {
 		allowance[msg.sender][_spender] = _value;
 		Approval(msg.sender, _spender, _value);
 		return true;

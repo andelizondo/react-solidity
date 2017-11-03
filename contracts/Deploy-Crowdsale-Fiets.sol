@@ -20,7 +20,7 @@ contract CrowdsaleFiets is Crowdsale, Refundable, Disposable {
       _startTime, _endTime, _wallet, _token
   ) Refundable (
 		_fundingGoal
-	) {}
+	) public {}
 
   // Overriding the basic function to give change when buying tokens
   function _buy(address _to, uint256 _value) internal {
@@ -38,7 +38,7 @@ contract CrowdsaleFiets is Crowdsale, Refundable, Disposable {
   }
 
 	// Custom disposing method (Token -> Vault -> Crowdsale)
-	function dispose() onlyOwner {
+	function dispose() public onlyOwner {
 	    if (crowdsaleToken.owner() != 0 && crowdsaleToken.owner() == address(this)) {
 	        crowdsaleToken.dispose();
 	    }

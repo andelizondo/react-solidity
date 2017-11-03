@@ -16,7 +16,7 @@ contract Refundable is Closable {
     // refund vault used to hold funds while crowdsale is running
     CrowdsaleVault public vault;
 
-    function Refundable(uint256 _fundingGoal) {
+    function Refundable(uint256 _fundingGoal) public {
         require(_fundingGoal > 0);
         vault = new CrowdsaleVault(msg.sender);
         fundingGoal = _fundingGoal * 1 ether;
@@ -30,7 +30,7 @@ contract Refundable is Closable {
     }
 
     // if crowdsale is unsuccessful, investors can claim refunds here
-    function claimRefund() {
+    function claimRefund() public {
         require(isClosed);
         require(!goalReached());
         vault.refund(msg.sender);
