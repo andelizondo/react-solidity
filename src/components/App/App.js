@@ -31,10 +31,10 @@ class App extends Component {
     // Default State
     this.state = AppState
     // Binding Methods
-    this.approve = this.approve.bind(this);
-    this.donate = this.donate.bind(this);
-    this.close = this.close.bind(this);
-    this.refund = this.refund.bind(this);
+    this.approve = this.approve.bind(this)
+    this.donate = this.donate.bind(this)
+    this.close = this.close.bind(this)
+    this.refund = this.refund.bind(this)
   }
 
   // Lifecycle Methods
@@ -54,7 +54,7 @@ class App extends Component {
   instantiateContracts() {
     this.state.web3.eth.getAccounts((error, accounts) => {
       // Get accounts, set web3 and currentAddress
-      var web3 = this.state.web3;
+      var web3 = this.state.web3
       web3.eth.defaultAccount = accounts[0]
       this.setAppState({
         web3: web3,
@@ -231,22 +231,31 @@ class App extends Component {
   get isApprovable() {
     return !this.state.crowdsale.ended
         && !this.state.crowdsale.approved
-        &&  this.state.user.address === this.state.crowdsale.owner;
+        &&  this.state.user.address === this.state.crowdsale.owner
+        &&  this.state.user.address !== AppState.user.address
+        &&  this.state.crowdsale.owner !== AppState.crowdsale.owner
   }
   get isDonable() {
     return !this.state.crowdsale.ended
         &&  this.state.crowdsale.approved
+        &&  this.state.crowdsale.ended !== "Loading"
+        &&  this.state.crowdsale.approved !== "Loading"
   }
   get isClosable() {
     return  this.state.crowdsale.ended
         && !this.state.crowdsale.closed
-        &&  this.state.user.address === this.state.crowdsale.owner;
+        &&  this.state.user.address === this.state.crowdsale.owner
+        &&  this.state.user.address !== AppState.user.address
+        &&  this.state.crowdsale.owner !== AppState.crowdsale.owner
   }
   get isRefundable() {
     return  this.state.crowdsale.ended
         &&  this.state.crowdsale.closed
         && !this.state.crowdsale.goalReached
-        &&  this.state.user.deposited > 0;
+        &&  this.state.crowdsale.ended !== "Loading"
+        &&  this.state.crowdsale.closed !== "Loading"
+        &&  this.state.crowdsale.goalReached !== "Loading"
+        &&  this.state.user.deposited > 0
   }
 
   // State Management
@@ -310,7 +319,7 @@ class App extends Component {
           </div>
         </main>
       </div>
-    );
+    )
   }
 }
 
