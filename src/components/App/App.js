@@ -55,7 +55,7 @@ class App extends Component {
     this.state.web3.eth.getAccounts((error, accounts) => {
       // Get accounts, set web3 and currentAddress
       var web3 = this.state.web3
-      web3.eth.defaultAccount = accounts[0]
+      web3.eth.defaultAccount = accounts[1]
       this.setAppState({
         web3: web3,
         user: Object.assign({}, this.state.user, {
