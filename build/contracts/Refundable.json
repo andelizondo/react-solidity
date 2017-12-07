@@ -12,8 +12,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": false,
@@ -21,8 +20,7 @@
       "name": "close",
       "outputs": [],
       "payable": false,
-      "type": "function",
-      "stateMutability": "nonpayable"
+      "type": "function"
     },
     {
       "constant": true,
@@ -35,8 +33,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": true,
@@ -49,8 +46,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": true,
@@ -63,8 +59,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": true,
@@ -77,8 +72,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": true,
@@ -91,8 +85,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": true,
@@ -105,8 +98,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": false,
@@ -114,8 +106,7 @@
       "name": "claimRefund",
       "outputs": [],
       "payable": false,
-      "type": "function",
-      "stateMutability": "nonpayable"
+      "type": "function"
     },
     {
       "constant": true,
@@ -128,8 +119,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": false,
@@ -142,8 +132,7 @@
       "name": "buyTokens",
       "outputs": [],
       "payable": true,
-      "type": "function",
-      "stateMutability": "payable"
+      "type": "function"
     },
     {
       "constant": true,
@@ -156,8 +145,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": false,
@@ -175,8 +163,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "nonpayable"
+      "type": "function"
     },
     {
       "constant": true,
@@ -189,8 +176,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": true,
@@ -203,8 +189,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "inputs": [
@@ -214,13 +199,11 @@
         }
       ],
       "payable": false,
-      "type": "constructor",
-      "stateMutability": "nonpayable"
+      "type": "constructor"
     },
     {
       "payable": true,
-      "type": "fallback",
-      "stateMutability": "payable"
+      "type": "fallback"
     },
     {
       "anonymous": false,
@@ -1940,5 +1923,9 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2017-11-03T00:06:07.762Z"
+  "updatedAt": "2017-11-03T00:06:07.762Z",
+  "contract_name": "Refundable",
+  "unlinked_binary": "0x",
+  "schema_version": "0.0.5",
+  "updated_at": 1512646965024
 }

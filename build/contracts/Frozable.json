@@ -12,8 +12,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": false,
@@ -35,8 +34,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "nonpayable"
+      "type": "function"
     },
     {
       "constant": true,
@@ -49,8 +47,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": false,
@@ -76,8 +73,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "nonpayable"
+      "type": "function"
     },
     {
       "constant": true,
@@ -90,8 +86,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": true,
@@ -109,8 +104,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": true,
@@ -123,8 +117,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": true,
@@ -137,8 +130,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": false,
@@ -160,8 +152,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "nonpayable"
+      "type": "function"
     },
     {
       "constant": true,
@@ -179,8 +170,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": true,
@@ -202,8 +192,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "view"
+      "type": "function"
     },
     {
       "constant": false,
@@ -225,8 +214,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "nonpayable"
+      "type": "function"
     },
     {
       "constant": false,
@@ -244,8 +232,7 @@
         }
       ],
       "payable": false,
-      "type": "function",
-      "stateMutability": "nonpayable"
+      "type": "function"
     },
     {
       "anonymous": false,
@@ -1320,5 +1307,9 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2017-11-03T00:06:07.819Z"
+  "updatedAt": "2017-11-03T00:06:07.819Z",
+  "contract_name": "Frozable",
+  "unlinked_binary": "0x",
+  "schema_version": "0.0.5",
+  "updated_at": 1512646965035
 }
