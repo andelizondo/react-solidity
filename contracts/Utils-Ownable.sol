@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.21;
 
 contract Ownable {
 	// Makes the token ownable to provide security features
@@ -22,8 +22,9 @@ contract Ownable {
 
 	// Transfers the ownership of the contract to another address
 	function transferOwnership(address _newOwner) public onlyOwner returns (bool success) {
+		require(_newOwner != address(0));
 		owner = _newOwner;
-		OwnershipChange(owner);
+		emit OwnershipChange(owner);
 		return true;
 	}
 }

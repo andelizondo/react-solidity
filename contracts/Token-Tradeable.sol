@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.21;
 
 import './Token-Basic.sol';
 
@@ -20,7 +20,7 @@ contract Tradeable is Token {
 	function updatePrices(uint256 _tokenPrice, uint256 _etherPrice) public onlyOwner {
 		tokenPrice = _tokenPrice;
 		etherPrice = _etherPrice;
-		PriceUpdate(msg.sender, tokenPrice, etherPrice, tokenPriceInWei());
+		emit PriceUpdate(msg.sender, tokenPrice, etherPrice, tokenPriceInWei());
 	}
 
 	// @return the price of the token in Wei according to the current exchange prices
@@ -33,7 +33,7 @@ contract Tradeable is Token {
 		amount = amountOfTokensToBuy(msg.value);			// calculates the amount of tokens to send
 		_transfer(owner, msg.sender, amount);				// Transfer the amount from the owner to the sender
 
-		var change = msg.value - valueOfTokensToSell(amount);
+		uint256 change = msg.value - valueOfTokensToSell(amount);
 		msg.sender.transfer(change);     					// returns change to the sender.
 		return amount;										// ends function and returns
 	}
@@ -44,7 +44,7 @@ contract Tradeable is Token {
 	/* Sells tokens for Eth at current Token price */
 	function sell(uint256 _amount) public returns (uint256 value) {
 		value = valueOfTokensToSell(_amount);				// calculates the amount of eth to send
-		require(this.balance >= value);    					// checks if the contract has enough ether to buy the tokens
+		require(address(this).balance >= value);    					// checks if the contract has enough ether to buy the tokens
 		_transfer(msg.sender, owner, _amount);				// Transfer the amount from the sender to the owner
 		msg.sender.transfer(value);     					// sends ether to the seller. It's important to do this last to avoid recursion attacks
 		return value;
