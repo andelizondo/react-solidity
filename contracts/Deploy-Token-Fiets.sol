@@ -22,5 +22,5 @@ contract TokenFiets is CrowdsaleToken {
   	_totalSupply,
   	_tokenPrice,
   	_etherPrice
-  ) {}
+  ) public {}
 }

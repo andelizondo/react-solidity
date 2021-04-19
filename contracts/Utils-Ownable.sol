@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.21;
 
 contract Ownable {
 	// Makes the token ownable to provide security features
@@ -10,7 +10,7 @@ contract Ownable {
 	event OwnershipChange(address indexed _owner);
 
 	// Initializes the contract and sets the owner to the contract creator
-	function Ownable() {
+	function Ownable() public {
 		owner = msg.sender;
 	}
 
@@ -21,9 +21,10 @@ contract Ownable {
 	}
 
 	// Transfers the ownership of the contract to another address
-	function transferOwnership(address _newOwner) onlyOwner returns (bool success) {
+	function transferOwnership(address _newOwner) public onlyOwner returns (bool success) {
+		require(_newOwner != address(0));
 		owner = _newOwner;
-		OwnershipChange(owner);
+		emit OwnershipChange(owner);
 		return true;
 	}
 }

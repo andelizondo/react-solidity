@@ -17,7 +17,7 @@ contract Closable is Crowdsale, Ownable {
     * @dev Must be called after crowdsale ends, to do some extra closure
     * work. Calls the contract's closure function.
     */
-    function close() onlyOwner {
+    function close() public onlyOwner {
         require(!isClosed);
         require(hasEnded());
 

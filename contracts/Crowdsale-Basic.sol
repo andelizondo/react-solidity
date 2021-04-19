@@ -33,7 +33,7 @@ contract Crowdsale {
     */
     event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
 
-    function Crowdsale(uint256 _startTime, uint256 _endTime, address _wallet, address _tokenAddress) {
+    function Crowdsale(uint256 _startTime, uint256 _endTime, address _wallet, address _tokenAddress) public {
         require(_startTime >= now);
         require(_endTime >= _startTime);
         require(_wallet != 0x0);
@@ -53,12 +53,12 @@ contract Crowdsale {
     }
 
     // fallback function can be used to buy tokens
-    function () payable {
+    function () public payable {
         buyTokens(msg.sender);
     }
 
     // low level token purchase function
-    function buyTokens(address beneficiary) payable {
+    function buyTokens(address beneficiary) public payable {
         require(beneficiary != 0x0);
         require(validPurchase());
 
